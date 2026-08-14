@@ -23,7 +23,7 @@ export default function Login({ onLogin }: Props) {
           alt="English Bookshelf"
           sx={{ width: 240, height: 240, mx: 'auto', mb: 1 }}
         />
-        <p style={{ textAlign: 'center', fontWeight: 600, color: '#022272' }}>American English File - 4th Edition</p>
+        <p style={{ textAlign: 'center', fontWeight: 600, color: '#022272' }}>American English File 2 - 4th Edition</p>
         <TextField
           label="Email"
           type="email"

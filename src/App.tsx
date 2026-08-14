@@ -82,7 +82,7 @@ export default function App() {
       ) : (
         <Container component="main" maxWidth="lg" sx={{ py: { xs: 3, sm: 5 } }}>
           <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-            <Typography variant="h4" component="h1">American English File - 4th Edition</Typography>
+            <Typography variant="h4" component="h1">American English File 2 - 4th Edition</Typography>
             <Tooltip title="Logoff"><IconButton onClick={handleLogoff} aria-label="Logoff"><LogoutIcon /></IconButton></Tooltip>
           </Stack>
           <Bookshelf onSelect={setSelected} allowedBookFilenames={allowedBookFilenames} />
