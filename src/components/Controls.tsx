@@ -9,6 +9,8 @@ import RemoveIcon from '@mui/icons-material/Remove'
 import AddIcon from '@mui/icons-material/Add'
 import VideocamIcon from '@mui/icons-material/Videocam'
 import StickyNote2Icon from '@mui/icons-material/StickyNote2'
+import ArticleIcon from '@mui/icons-material/Article'
+import MenuBookIcon from '@mui/icons-material/MenuBook'
 import type { BookUnit } from '../models/book'
 type Props = {
   page: number
@@ -101,17 +103,20 @@ export default function Controls({
             if (Number.isInteger(selectedPage)) onSetPage(selectedPage + 1)
         }} disabled={numPages === null} sx={{ width: { xs: 'clamp(70px, 22vw, 108px)', sm: 70, md: 105 }, flex: '0 0 auto' }} />
         <Typography variant="body2" sx={{ mr: { xs: 0, sm: 1 }, flexShrink: 0, whiteSpace: 'nowrap' }}>of {numPages !== null ? numPages - 1 : '--'}</Typography>
-          <FormControl size="small" sx={{ minWidth: { xs: 'clamp(70px, 22vw, 105px)', sm: 70, md: 120 }, flexShrink: 0, gridArea: { sm: 'unit' } }}>
-          <Select
-            value={pagesPerView}
-            onChange={(event) => onPagesPerViewChange(Number(event.target.value) as 1 | 2)}
-            aria-label="Pages per view"
-            MenuProps={{ disablePortal: true }}
-          >
-            <MenuItem value={1}>1 page</MenuItem>
-            {!compact && <MenuItem value={2}>2 pages</MenuItem>}
-          </Select>
-        </FormControl>
+        <Stack direction="row" sx={{ alignItems: 'center', gap: 0.25, flexShrink: 0 }}>
+          <Tooltip title="One page">
+            <IconButton color={pagesPerView === 1 ? 'primary' : 'default'} onClick={() => onPagesPerViewChange(1)} aria-label="One page" aria-pressed={pagesPerView === 1}>
+              <ArticleIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={compact ? 'Two pages unavailable on mobile' : 'Two pages'}>
+            <span>
+              <IconButton color={pagesPerView === 2 ? 'primary' : 'default'} onClick={() => onPagesPerViewChange(2)} disabled={compact} aria-label="Two pages" aria-pressed={pagesPerView === 2}>
+                <MenuBookIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+        </Stack>
       </Stack>
       {units.length > 0 && <Stack direction="row" sx={{ alignItems: 'center', width: { xs: '100%', md: 'auto' }, minWidth: 0, flexShrink: 0, gridArea: { sm: 'unit' } }}><FormControl size="small" fullWidth sx={{ minWidth: { md: 220 }, flexShrink: 0 }}>
           <Select
