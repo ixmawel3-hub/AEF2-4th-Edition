@@ -8,7 +8,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import RemoveIcon from '@mui/icons-material/Remove'
 import AddIcon from '@mui/icons-material/Add'
 import VideocamIcon from '@mui/icons-material/Videocam'
-import NoteAltIcon from '@mui/icons-material/NoteAlt'
+import StickyNote2Icon from '@mui/icons-material/StickyNote2'
 import type { BookUnit } from '../models/book'
 type Props = {
   page: number
@@ -140,7 +140,7 @@ export default function Controls({
       <Stack direction="row" sx={{ alignItems: 'center', justifyContent: { xs: 'flex-end', sm: 'flex-start' }, gap: { xs: 0, sm: 0.5 }, width: { xs: 'auto', md: 'auto' }, flexShrink: 0, gridArea: { sm: 'actions' } }}>
         <Tooltip title="Audio library"><IconButton color={audioOpen ? 'primary' : 'default'} onClick={onToggleAudio}><AudiotrackIcon /></IconButton></Tooltip>
         <Tooltip title="Video library"><IconButton color={videoOpen ? 'primary' : 'default'} onClick={onToggleVideo}><VideocamIcon /></IconButton></Tooltip>
-        <Tooltip title="Notes"><IconButton color={notesOpen ? 'primary' : 'default'} onClick={onToggleNotes} aria-label="Notes"><NoteAltIcon /></IconButton></Tooltip>
+        <Tooltip title="Notes"><IconButton color={notesOpen ? 'primary' : 'default'} onClick={onToggleNotes} aria-label="Notes"><StickyNote2Icon /></IconButton></Tooltip>
         <Tooltip title="Fullscreen"><IconButton onClick={onToggleFull}><FullscreenIcon /></IconButton></Tooltip>
       </Stack>
       </Stack>

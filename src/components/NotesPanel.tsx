@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Box, IconButton, Paper, Stack, TextField, Tooltip, Typography } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
@@ -15,6 +15,8 @@ export type Note = {
   color: string
   minimized: boolean
   position: { x: number; y: number }
+  width?: number
+  height?: number
 }
 
 type Props = {
@@ -39,6 +41,22 @@ const clamp = (value: number, min: number, max: number) => Math.min(Math.max(val
 export default function NotesPanel({ page, note, minimizedIndex, onChange, onDelete }: Props) {
   const dragRef = useRef<{ offsetX: number; offsetY: number } | null>(null)
   const draggedRef = useRef(false)
+  const panelRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const panel = panelRef.current
+    if (!panel || note.minimized) return
+
+    const resizeObserver = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.target.getBoundingClientRect()
+      const nextWidth = Math.round(width)
+      const nextHeight = Math.round(height)
+      if (nextWidth === note.width && nextHeight === note.height) return
+      onChange({ ...note, width: nextWidth, height: nextHeight })
+    })
+    resizeObserver.observe(panel)
+    return () => resizeObserver.disconnect()
+  }, [note, onChange])
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.button !== 0) return
@@ -93,17 +111,20 @@ export default function NotesPanel({ page, note, minimizedIndex, onChange, onDel
 
   return (
     <Paper
+      ref={panelRef}
       elevation={8}
       sx={{
         position: 'fixed',
         left: note.position.x,
         top: note.position.y,
         zIndex: 30,
-        width: 'min(300px, calc(100vw - 16px))',
+        width: note.width ?? 'min(300px, calc(100vw - 16px))',
+        height: note.height ?? 'auto',
         minWidth: 220,
         minHeight: 120,
         maxWidth: 'calc(100vw - 16px)',
         maxHeight: 'calc(100vh - 16px)',
+        boxSizing: 'border-box',
         overflow: 'hidden',
         resize: 'both',
         display: 'flex',
