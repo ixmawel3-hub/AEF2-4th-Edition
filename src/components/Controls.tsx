@@ -1,4 +1,5 @@
-import { FormControl, IconButton, MenuItem, Select, Stack, TextField, Tooltip, Typography } from '@mui/material'
+import { useRef } from 'react'
+import { FormControl, IconButton, InputAdornment, MenuItem, Select, Stack, TextField, Tooltip, Typography } from '@mui/material'
 import AudiotrackIcon from '@mui/icons-material/Audiotrack'
 import FullscreenIcon from '@mui/icons-material/Fullscreen'
 import UndoIcon from '@mui/icons-material/Undo'
@@ -11,6 +12,7 @@ import VideocamIcon from '@mui/icons-material/Videocam'
 import StickyNote2Icon from '@mui/icons-material/StickyNote2'
 import ArticleIcon from '@mui/icons-material/Article'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import type { BookUnit } from '../models/book'
 type Props = {
   page: number
@@ -68,6 +70,18 @@ export default function Controls({
   const currentUnit = units.reduce<BookUnit | null>((activeUnit, unit) => (
     unit.page <= page ? unit : activeUnit
   ), null)
+  const pageInputRef = useRef<HTMLInputElement | null>(null)
+
+  const applyTypedPage = () => {
+    const value = pageInputRef.current?.value.trim() ?? ''
+    if (value === '') {
+      onSetPage(1)
+      return
+    }
+
+    const selectedPage = Number(value)
+    if (Number.isInteger(selectedPage)) onSetPage(selectedPage + 1)
+  }
 
   return (
     <Stack sx={{
@@ -92,15 +106,11 @@ export default function Controls({
         <Tooltip title="Forward in page history"><span><IconButton sx={{ p: { xs: 0.5, sm: 0.5, md: 1 } }} onClick={onForward} disabled={!canGoForward} aria-label="Forward in page history"><RedoIcon /></IconButton></span></Tooltip>
         <Tooltip title="Previous page"><span><IconButton sx={{ p: { xs: 0.5, sm: 0.5, md: 1 } }} onClick={onPrev} disabled={page <= 1} aria-label="Previous"><NavigateBeforeIcon /></IconButton></span></Tooltip>
         <Tooltip title="Next page"><span><IconButton sx={{ p: { xs: 0.5, sm: 0.5, md: 1 } }} onClick={onNext} disabled={numPages !== null && page >= numPages} aria-label="Next"><NavigateNextIcon /></IconButton></span></Tooltip>
-        <TextField size="small" label="Page" value={page - 1} slotProps={{ htmlInput: { inputMode: 'numeric', list: 'pdf-pages', 'aria-label': 'Select or type page, starting at zero' } }} onChange={(event) => {
-          const value = event.target.value.trim()
-            if (value === '') {
-              onSetPage(1)
-              return
-            }
-
-            const selectedPage = Number(value)
-            if (Number.isInteger(selectedPage)) onSetPage(selectedPage + 1)
+        <TextField key={page} inputRef={pageInputRef} size="small" label="Page" defaultValue={page - 1} slotProps={{ htmlInput: { inputMode: 'numeric', 'aria-label': 'Select or type page, starting at zero' }, input: { endAdornment: <InputAdornment position="end"><Tooltip title="Go to page"><IconButton edge="end" size="small" onClick={applyTypedPage} disabled={numPages === null} aria-label="Go to page"><ArrowForwardIcon /></IconButton></Tooltip></InputAdornment> } }} onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault()
+            applyTypedPage()
+          }
         }} disabled={numPages === null} sx={{ width: { xs: 'clamp(70px, 22vw, 108px)', sm: 70, md: 105 }, flex: '0 0 auto' }} />
         <Typography variant="body2" sx={{ mr: { xs: 0, sm: 1 }, flexShrink: 0, whiteSpace: 'nowrap' }}>of {numPages !== null ? numPages - 1 : '--'}</Typography>
         <Stack direction="row" sx={{ alignItems: 'center', gap: 0.25, flexShrink: 0 }}>
@@ -129,13 +139,6 @@ export default function Controls({
             {units.map((unit) => <MenuItem key={unit.name} value={unit.page}>{unit.name}</MenuItem>)}
           </Select>
         </FormControl></Stack>}
-      <datalist id="pdf-pages">
-          {Array.from({ length: numPages ?? 0 }, (_, index) => index).map((pageNumber) => (
-            <option key={pageNumber} value={pageNumber}>
-              {pageNumber}
-            </option>
-          ))}
-      </datalist>
       <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 0.5, width: '100%', display: { xs: 'flex', sm: 'contents' } }}>
       <Stack direction="row" sx={{ alignItems: 'center', justifyContent: { xs: 'flex-start', sm: 'space-between' }, gap: { xs: 0, sm: 0.5 }, width: { xs: 'auto', md: 'auto' }, flexShrink: 0, gridArea: { sm: 'zoom' } }}>
         <Tooltip title="Zoom out"><IconButton onClick={onZoomOut}><RemoveIcon /></IconButton></Tooltip>
