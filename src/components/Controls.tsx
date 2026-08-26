@@ -1,11 +1,14 @@
 import { FormControl, IconButton, MenuItem, Select, Stack, TextField, Tooltip, Typography } from '@mui/material'
 import AudiotrackIcon from '@mui/icons-material/Audiotrack'
 import FullscreenIcon from '@mui/icons-material/Fullscreen'
+import UndoIcon from '@mui/icons-material/Undo'
+import RedoIcon from '@mui/icons-material/Redo'
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import RemoveIcon from '@mui/icons-material/Remove'
 import AddIcon from '@mui/icons-material/Add'
 import VideocamIcon from '@mui/icons-material/Videocam'
+import NoteAltIcon from '@mui/icons-material/NoteAlt'
 import type { BookUnit } from '../models/book'
 type Props = {
   page: number
@@ -14,6 +17,10 @@ type Props = {
   pagesPerView: 1 | 2
   onNext: () => void
   onPrev: () => void
+  onBack: () => void
+  canGoBack: boolean
+  onForward: () => void
+  canGoForward: boolean
   onZoomIn: () => void
   onZoomOut: () => void
   onSetPage: (n: number) => void
@@ -24,6 +31,8 @@ type Props = {
   audioOpen: boolean
   onToggleVideo: () => void
   videoOpen: boolean
+  onToggleNotes: () => void
+  notesOpen: boolean
   compact: boolean
   onToggleFull: () => void
 }
@@ -35,6 +44,10 @@ export default function Controls({
   pagesPerView,
   onNext,
   onPrev,
+  onBack,
+  canGoBack,
+  onForward,
+  canGoForward,
   onZoomIn,
   onZoomOut,
   onSetPage,
@@ -45,6 +58,8 @@ export default function Controls({
   audioOpen,
   onToggleVideo,
   videoOpen,
+  onToggleNotes,
+  notesOpen,
   compact,
   onToggleFull
 }: Props) {
@@ -55,6 +70,8 @@ export default function Controls({
   return (
     <Stack direction={{ xs: 'column', sm: 'row' }} sx={{ alignItems: { xs: 'stretch', sm: 'center' }, gap: { xs: 0.5, sm: 0.5 }, p: 1, overflowX: { xs: 'hidden', sm: 'auto' }, borderBottom: 1, borderColor: 'divider', bgcolor: 'background.paper', position: 'sticky', top: 49, zIndex: 10, scrollbarWidth: 'thin' }}>
       <Stack direction="row" sx={{ alignItems: 'center', justifyContent: { xs: 'space-between', sm: 'flex-start' }, gap: { xs: 0, sm: 0.5 }, width: { xs: '100%', sm: 'auto' }, minWidth: 0, flexShrink: 0 }}>
+        <Tooltip title="Back in page history"><span><IconButton onClick={onBack} disabled={!canGoBack} aria-label="Back in page history"><UndoIcon /></IconButton></span></Tooltip>
+        <Tooltip title="Forward in page history"><span><IconButton onClick={onForward} disabled={!canGoForward} aria-label="Forward in page history"><RedoIcon /></IconButton></span></Tooltip>
         <Tooltip title="Previous page"><span><IconButton onClick={onPrev} disabled={page <= 1} aria-label="Previous"><NavigateBeforeIcon /></IconButton></span></Tooltip>
         <Tooltip title="Next page"><span><IconButton onClick={onNext} disabled={numPages !== null && page >= numPages} aria-label="Next"><NavigateNextIcon /></IconButton></span></Tooltip>
         <TextField size="small" label="Page" value={page - 1} slotProps={{ htmlInput: { inputMode: 'numeric', list: 'pdf-pages', 'aria-label': 'Select or type page, starting at zero' } }} onChange={(event) => {
@@ -104,6 +121,7 @@ export default function Controls({
         <Tooltip title="Zoom in"><IconButton onClick={onZoomIn}><AddIcon /></IconButton></Tooltip>
         <Tooltip title="Audio library"><IconButton color={audioOpen ? 'primary' : 'default'} onClick={onToggleAudio}><AudiotrackIcon /></IconButton></Tooltip>
         <Tooltip title="Video library"><IconButton color={videoOpen ? 'primary' : 'default'} onClick={onToggleVideo}><VideocamIcon /></IconButton></Tooltip>
+        <Tooltip title="Notes"><IconButton color={notesOpen ? 'primary' : 'default'} onClick={onToggleNotes} aria-label="Notes"><NoteAltIcon /></IconButton></Tooltip>
         <Tooltip title="Fullscreen"><IconButton onClick={onToggleFull}><FullscreenIcon /></IconButton></Tooltip>
       </Stack>
     </Stack>
