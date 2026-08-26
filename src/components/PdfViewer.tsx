@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Alert, AppBar, Box, Button, CircularProgress, IconButton, Stack, Toolbar, Tooltip, Typography, useMediaQuery } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import HomeIcon from '@mui/icons-material/Home'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { Document, Page, pdfjs } from 'react-pdf'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
@@ -162,6 +163,7 @@ export default function PdfViewer({ src, title, onClose, onLogoff }: Props) {
           <Typography variant="h6" noWrap sx={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</Typography>
           <Stack direction="row" spacing={0.5} sx={{ flexShrink: 0 }}>
             <Button startIcon={<ArrowBackIcon />} onClick={() => onClose?.()} color="inherit" size="small"><Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Back to Bookshelf</Box></Button>
+            <Tooltip title="Homepage"><IconButton component="a" href="https://ixmawel3-hub.github.io/EnglishBooks/" aria-label="Homepage" color="inherit" size="small"><HomeIcon fontSize="small" /></IconButton></Tooltip>
             <Tooltip title="Logoff"><IconButton onClick={() => onLogoff?.()} aria-label="Logoff" color="inherit" size="small"><LogoutIcon fontSize="small" /></IconButton></Tooltip>
           </Stack>
         </Toolbar>
